@@ -15,23 +15,23 @@ def index(request):
 
 def home(request):
     cursos = Cursos.objects.all()
-    return render(request, "gestion_cursos.html", {"cursos": cursos})
+    return render(request, 'gestion_cursos.html', {"cursos": cursos})
 
 def registrarCurso(request):
     codigo = request.POST['txtCodigo']
     nombre = request.POST['txtNombre']
     precio = request.POST['numPrecio']
     curso = Cursos.objects.create(codigo=codigo, nombre=nombre, precio=precio)
-    return redirect('/')
+    return redirect('gestion_cursos.html')
 
 def eliminarCurso(request, codigo):
     curso = Cursos.objects.get(codigo=codigo)
     curso.delete()
-    return redirect('/')
+    return redirect('gestion_cursos.html')
 
 def edicionCurso(request, codigo):
     curso = Cursos.objects.get(codigo=codigo)
-    return render(request, "edicionCurso.html", {"curso": curso})
+    return render(request, 'edicionCurso.html', {"curso": curso})
 
 def editarCurso(request):
     codigo = request.POST['txtCodigo']
@@ -41,7 +41,7 @@ def editarCurso(request):
     curso.nombre = nombre
     curso.precio = precio
     curso.save()
-    return redirect('/')
+    return redirect('gestion_cursos.html')
 
 
 
@@ -64,7 +64,7 @@ def login_view(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('index')
+                return redirect('base.html')
         else:
             messages.error(request, 'Contraseña o nombre de usuario incorrecto.')
     else:
@@ -77,11 +77,9 @@ def register_view(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Registro Exitoso.')
-            return redirect('login')
+            return redirect('login.html')
     else:
         form = UserRegistrationForm()
     return render(request, 'register.html', {'form': form})
-
-
 class CustomLogoutView(LogoutView):
     next_page = 'login'
